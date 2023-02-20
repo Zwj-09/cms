@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import myTable from '../components/myTable/myTable.vue'
 
 import { getCurrentInstance } from 'vue'
@@ -30,12 +30,21 @@ onMounted(() => {
   getTableData()
 })
 
+let res = ref('aaaa')
+
 const tableData = reactive({
   loading: false,
   stripe: true,
-  height: 800,
+  height: 250,
   border: true,
   tableHead: [
+    {
+      uniqueId: 10,
+      align: 'center',
+      label: '序号',
+      type: 'index',
+      width: 100
+    },
     {
       uniqueId: 1,
       align: 'center',
@@ -56,29 +65,30 @@ const tableData = reactive({
       label: 'ID',
       prop: 'id',
       type: 'show',
-      width: 80
+      width: 80,
+      sortable: true
     },
-    {
-      uniqueId: 4,
-      align: 'center',
-      label: '图片A',
-      type: 'img',
-      prop: 'thumbnailUrl',
-      width: 140
-    },
-    {
-      uniqueId: 5,
-      align: 'center',
-      label: '图片B',
-      width: 140,
-      type: 'img',
-      prop: 'url'
-    },
-    { uniqueId: 6, align: 'center', label: '操作', type: 'button', width: 220 }
+    // {
+    //   uniqueId: 4,
+    //   align: 'center',
+    //   label: '图片A',
+    //   type: 'img',
+    //   prop: 'thumbnailUrl',
+    //   width: 140
+    // },
+    // {
+    //   uniqueId: 5,
+    //   align: 'center',
+    //   label: '图片B',
+    //   width: 140,
+    //   type: 'img',
+    //   prop: 'url'
+    // },
+    { uniqueId: 6, align: 'center', label: '操作', type: 'button', width: 220, fixed: 'right' }
   ],
   tableBody: [],
   currentPage: 1,
-  currentSize: 10,
+  currentSize: 4,
   total: 200,
   pageSizes: [10, 20, 30, 40]
 })
@@ -107,9 +117,15 @@ const handleCurrentChange = (newPage) => {
   getTableData()
 }
 
+let selectedIds = ref([])
+
 // 多选
 const handleSelectionChange = (val) => {
-  console.log('val', val)
+  selectedIds.value = []
+  val.forEach((item) => {
+    selectedIds.value.push(item.id)
+  })
+  console.log('selectedIds', selectedIds.value)
 }
 
 // 操作
@@ -120,9 +136,9 @@ const handleList = (type, row) => {
 
 <style scoped>
 .box {
+  width: 1200px;
+  height: 800px;
   margin: 0 auto;
-  width: 80%;
-  height: 80vh;
-  background-color: red;
+  overflow: hidden;
 }
 </style>

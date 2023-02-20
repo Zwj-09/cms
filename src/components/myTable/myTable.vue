@@ -3,6 +3,7 @@
   <div class="container">
     <!-- 表单 -->
     <el-table
+      style="width: 100%"
       :data="tableData.tableBody"
       :border="tableData.border"
       :height="tableData.height"
@@ -56,7 +57,12 @@
           :width="item.width"
         >
           <template #default="slotProps">
-            <img class="img" :src="slotProps.row[item.prop]" alt="" />
+            <el-image
+              :src="slotProps.row[item.prop]"
+              :preview-src-list="[slotProps.row[item.prop]]"
+              fit="cover"
+              :preview-teleported="true"
+            />
           </template>
         </el-table-column>
 
@@ -66,6 +72,7 @@
           :label="item.label"
           :align="item.align"
           :width="item.width"
+          :fixed="item.fixed"
         >
           <template #default="{ row, $index }">
             <slot name="button" :row="row" :index="$index"></slot>
@@ -89,8 +96,8 @@
     <!-- 分页 -->
     <div class="pagination">
       <el-pagination
-        v-model:current-page="tableData.currentPage"
-        v-model:page-size="tableData.currentSize"
+        background
+        small
         :page-sizes="tableData.pageSizes"
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.total"
@@ -105,9 +112,9 @@
 // 接受父组件传递的参数
 const props = defineProps({
   tableData: {
-    type: Array,
+    type: Object,
     default: () => {
-      return []
+      return {}
     }
   }
 })
